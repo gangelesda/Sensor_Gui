@@ -1,4 +1,5 @@
 import Tkinter as tk
+import time
 from PIL import Image, ImageTk
 
 class Master_Frame(tk.Tk):
@@ -27,23 +28,32 @@ class Master_Frame(tk.Tk):
         self.show_frame(Lock_Screen)
 
 class Pin_Screen(tk.Frame):
-    def makeWidgets(self,controller):
+    def digitEnter(self, digit):
+        currentPin = self.lbPin["text"]
+        if(len(currentPin) < 4):
+            self.lbPin.configure(text=currentPin+digit)
+
+    def pinEnter(self, controller):
+        if(self.lbPin["text"] == "6790"):
+            controller.show_frame(Lock_Screen)
+
+    def makeWidgets(self, controller):
         #Label
-        self.lbPin = tk.Label(self, text="", height=2, width=36)
+        self.lbPin = tk.Label(self, text="", height=2, width=36, bg="#ffffff")
 
         #Button Definition
-        self.one_button = tk.Button(self, text="1", height=5, width=12)
-        self.two_button = tk.Button(self, text="2", height=5, width=12)
-        self.three_button = tk.Button(self, text="3", height=5, width=12)
-        self.four_button = tk.Button(self, text="4", height=5, width=12)
-        self.five_button = tk.Button(self, text="5", height=5, width=12)
-        self.six_button = tk.Button(self, text="6", height=5, width=12)
-        self.seven_button = tk.Button(self, text="7", height=5, width=12)
-        self.eight_button = tk.Button(self, text="8", height=5, width=12)
-        self.nine_button = tk.Button(self, text="9", height=5, width=12)
-        self.zero_button = tk.Button(self, text="0", height=5, width=12)
-        self.clear_button = tk.Button(self, text="Clear", height=1, width=10)
-        self.enter_button = tk.Button(self, text="Enter", height=1, width=10)
+        self.one_button = tk.Button(self, text="1", height=5, width=12, command=lambda: self.digitEnter("1"))
+        self.two_button = tk.Button(self, text="2", height=5, width=12, command=lambda: self.digitEnter("2"))
+        self.three_button = tk.Button(self, text="3", height=5, width=12, command=lambda: self.digitEnter("3"))
+        self.four_button = tk.Button(self, text="4", height=5, width=12, command=lambda: self.digitEnter("4"))
+        self.five_button = tk.Button(self, text="5", height=5, width=12, command=lambda: self.digitEnter("5"))
+        self.six_button = tk.Button(self, text="6", height=5, width=12, command=lambda: self.digitEnter("6"))
+        self.seven_button = tk.Button(self, text="7", height=5, width=12, command=lambda: self.digitEnter("7"))
+        self.eight_button = tk.Button(self, text="8", height=5, width=12, command=lambda: self.digitEnter("8"))
+        self.nine_button = tk.Button(self, text="9", height=5, width=12, command=lambda: self.digitEnter("9"))
+        self.zero_button = tk.Button(self, text="0", height=5, width=12, command=lambda: self.digitEnter("0"))
+        self.clear_button = tk.Button(self, text="Clear", height=1, width=10, command=lambda: self.lbPin.configure(text=""))
+        self.enter_button = tk.Button(self, text="Enter", height=1, width=10, command=lambda: self.pinEnter(controller))
         self.back_button = tk.Button(self, text="Back", height=1, width=10, command=lambda: controller.show_frame(Lock_Screen))
 
         #Positioning
@@ -75,18 +85,15 @@ class Lock_Screen(tk.Frame):
         image_lock = image_lock.resize((300,400), Image.ANTIALIAS)
         photo_lock = ImageTk.PhotoImage(image_lock)
 
-        self.lbLock = tk.Label(self, image=photo_lock, state="disabled", bg="#ffffff")
-        self.lbUnlock = tk.Label(self, image=photo_unlock, bg="#ffffff")
+        self.lbLock = tk.Label(self, image=photo_lock, bg="#ffffff")
         self.lbLock.image = photo_lock
-        self.lbUnlock.image = photo_unlock
         self.btManual = tk.Button(self, text="Manual", height=1, width=10, command=lambda: controller.show_frame(Pin_Screen))
 
         self.lbLock.grid(row=0, column=0, columnspan=3, padx=(10,10), pady=(15,10))
-        self.lbUnlock.grid(row=0, column=0, columnspan=3, pady=(15,10))
         self.btManual.grid(row=1, column=2)
 
     def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent,bg="#ffffff")
+        tk.Frame.__init__(self, parent, bg="#ffffff")
         self.makeWidgets(controller)
 
 doorlock_gui = Master_Frame()
