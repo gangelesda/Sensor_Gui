@@ -28,6 +28,9 @@ class Master_Frame(tk.Tk):
         self.show_frame(Lock_Screen)
 
 class Pin_Screen(tk.Frame):
+    def emptyLabel(self):
+        self.lbPin.configure(text="")
+
     def digitEnter(self, digit):
         currentPin = self.lbPin["text"]
         if(len(currentPin) < 4):
@@ -35,6 +38,9 @@ class Pin_Screen(tk.Frame):
 
     def pinEnter(self, controller):
         if(self.lbPin["text"] == "6790"):
+            self.lbPin.configure(text="Unlocked!!")
+            self.update()
+            self.lbPin.after(3000, self.emptyLabel())
             controller.show_frame(Lock_Screen)
 
     def makeWidgets(self, controller):
@@ -52,7 +58,7 @@ class Pin_Screen(tk.Frame):
         self.eight_button = tk.Button(self, text="8", height=5, width=12, command=lambda: self.digitEnter("8"))
         self.nine_button = tk.Button(self, text="9", height=5, width=12, command=lambda: self.digitEnter("9"))
         self.zero_button = tk.Button(self, text="0", height=5, width=12, command=lambda: self.digitEnter("0"))
-        self.clear_button = tk.Button(self, text="Clear", height=1, width=10, command=lambda: self.lbPin.configure(text=""))
+        self.clear_button = tk.Button(self, text="Clear", height=1, width=10, command=lambda: self.emptyLabel())
         self.enter_button = tk.Button(self, text="Enter", height=1, width=10, command=lambda: self.pinEnter(controller))
         self.back_button = tk.Button(self, text="Back", height=1, width=10, command=lambda: controller.show_frame(Lock_Screen))
 
@@ -77,16 +83,25 @@ class Pin_Screen(tk.Frame):
         self.makeWidgets(controller)
       
 class Lock_Screen(tk.Frame):
+    def lock(self):
+        self.lbLock.configure(image=self.photo_lock)
+        self.update()
+
+    def unlock(self):
+        self.lbLock.configure(image=self.photo_unlock)
+        self.update()
+        self.lbLock.after(3000,self.lock())
+                
     def makeWidgets(self, controller):
         image_unlock = Image.open("unlock.png")
         image_unlock = image_unlock.resize((300,400), Image.ANTIALIAS)
-        photo_unlock = ImageTk.PhotoImage(image_unlock)
+        self.photo_unlock = ImageTk.PhotoImage(image_unlock)
         image_lock = Image.open("lock.png")
         image_lock = image_lock.resize((300,400), Image.ANTIALIAS)
-        photo_lock = ImageTk.PhotoImage(image_lock)
+        self.photo_lock = ImageTk.PhotoImage(image_lock)
 
-        self.lbLock = tk.Label(self, image=photo_lock, bg="#ffffff")
-        self.lbLock.image = photo_lock
+        self.lbLock = tk.Label(self, image=self.photo_lock, bg="#ffffff")
+        self.lbLock.image = self.photo_lock
         self.btManual = tk.Button(self, text="Manual", height=1, width=10, command=lambda: controller.show_frame(Pin_Screen))
 
         self.lbLock.grid(row=0, column=0, columnspan=3, padx=(10,10), pady=(15,10))
