@@ -42,6 +42,10 @@ class Pin_Screen(tk.Frame):
             self.update()
             self.lbPin.after(3000, self.emptyLabel())
             controller.show_frame(Lock_Screen)
+        else:
+            self.lbPin.configure(text="Wrong!")
+            self.update()
+            self.lbPin.after(1000, self.emptyLabel())
 
     def makeWidgets(self, controller):
         #Label
